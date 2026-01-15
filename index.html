@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>Quick Add Kalender</title>
+</head>
+<body>
+
+<h2>Termin hinzufügen</h2>
+
+<textarea id="text" rows="3" style="width:100%"
+  placeholder="z.B. morgen 14:00 mittagessen 60min"></textarea>
+
+<br><br>
+
+<button onclick="send()">Termin erstellen</button>
+
+<p id="status"></p>
+
+<script>
+const API_BASE = "https://calendar-api-l9kp.onrender.com";
+
+async function send() {
+  const text = document.getElementById("text").value.trim();
+  if (!text) return;
+
+  document.getElementById("status").innerText = "Sende…";
+
+  try {
+    const res = await fetch(API_BASE + "/api/google/quick-add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.message || "Fehler");
+    }
+
+    document.getElementById("status").innerText =
+      "✅ Eingetragen: " + data.parsed.title;
+  } catch (e) {
+    document.getElementById("status").innerText =
+      "❌ Fehler: " + e.message;
+  }
+}
+</script>
+
+</body>
+</html>
