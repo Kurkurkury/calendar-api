@@ -1,0 +1,25 @@
+{
+  "events": [
+    {
+      "id": "gcal_qebjt5v0jiqsrotbf1m3itkmfc",
+      "title": "Coiffeur",
+      "start": "2026-01-16T13:00:00",
+      "end": "2026-01-16T14:00:00",
+      "location": "",
+      "notes": "60min",
+      "color": "",
+      "googleEventId": "qebjt5v0jiqsrotbf1m3itkmfc"
+    },
+    {
+      "id": "gcal_6nalif2r3lbelsg4nm5l1mod1o",
+      "title": "Coiffeur",
+      "start": "2026-01-16T12:00:00.000Z",
+      "end": "2026-01-16T13:00:00.000Z",
+      "location": "",
+      "notes": "",
+      "color": "",
+      "googleEventId": "6nalif2r3lbelsg4nm5l1mod1o"
+    }
+  ],
+  "tasks": []
+}
