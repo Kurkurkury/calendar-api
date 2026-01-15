@@ -5,6 +5,41 @@
   <title>Quick Add Kalender</title>
 </head>
 <body>
+<div style="margin:20px">
+  <input
+    id="text"
+    placeholder="z.B. morgen 14:00 Mittagessen 30min"
+    style="width:300px;padding:8px"
+  />
+  <button onclick="send()" style="padding:8px">
+    Termin erstellen
+  </button>
+</div>
+
+<script>
+async function send() {
+  const text = document.getElementById("text").value;
+  if (!text) {
+    alert("Bitte Text eingeben");
+    return;
+  }
+
+  const res = await fetch(
+    "https://calendar-api-l9kp.onrender.com/api/google/quick-add",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": "DEIN_API_KEY_HIER"
+      },
+      body: JSON.stringify({ text })
+    }
+  );
+
+  const data = await res.json();
+  alert(data.ok ? "Termin erstellt ✅" : "Fehler ❌");
+}
+</script>
 
 <h2>Termin hinzufügen</h2>
 
