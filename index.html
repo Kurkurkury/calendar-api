@@ -74,8 +74,17 @@ async function send() {
       throw new Error(data.message || "Fehler");
     }
 
-    document.getElementById("status").innerText =
-      "✅ Eingetragen: " + data.parsed.title;
+    const title = data?.parsed?.title;
+    const start = data?.parsed?.start;
+    const end = data?.parsed?.end;
+    const date = start?.split("T")[0];
+    const startTime = start?.split("T")[1]?.slice(0, 5);
+    const endTime = end?.split("T")[1]?.slice(0, 5);
+    const statusMessage =
+      title && date && startTime && endTime
+        ? `✅ Termin erstellt: ${title} — ${date} ${startTime}-${endTime} (Europe/Zurich)`
+        : "✅ Termin erstellt.";
+    document.getElementById("status").innerText = statusMessage;
   } catch (e) {
     document.getElementById("status").innerText =
       "❌ Fehler: " + e.message;
