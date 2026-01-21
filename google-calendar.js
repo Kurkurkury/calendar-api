@@ -144,3 +144,23 @@ export async function createGoogleEvent({ title, start, end, location = "", note
 
   return { ok: true, googleEvent: res.data };
 }
+
+export async function listGoogleEvents({ timeMin, timeMax }) {
+  if (!timeMin || !timeMax) {
+    return { ok: false, message: "timeMin/timeMax required" };
+  }
+
+  const cfg = getGoogleConfig();
+  const auth = getAuthedClient();
+  const calendar = google.calendar({ version: "v3", auth });
+
+  const res = await calendar.events.list({
+    calendarId: cfg.GOOGLE_CALENDAR_ID || "primary",
+    timeMin: String(timeMin),
+    timeMax: String(timeMax),
+    singleEvents: true,
+    orderBy: "startTime",
+  });
+
+  return { ok: true, events: res.data.items || [], calendarId: cfg.GOOGLE_CALENDAR_ID || "primary" };
+}
