@@ -164,3 +164,24 @@ export async function listGoogleEvents({ timeMin, timeMax }) {
 
   return { ok: true, events: res.data.items || [], calendarId: cfg.GOOGLE_CALENDAR_ID || "primary" };
 }
+
+export async function deleteGoogleEvent({ eventId }) {
+  if (!eventId) {
+    return { ok: false, message: "eventId required" };
+  }
+
+  try {
+    const cfg = getGoogleConfig();
+    const auth = getAuthedClient();
+    const calendar = google.calendar({ version: "v3", auth });
+
+    await calendar.events.delete({
+      calendarId: cfg.GOOGLE_CALENDAR_ID || "primary",
+      eventId: String(eventId),
+    });
+
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, message: e?.message || "unknown" };
+  }
+}

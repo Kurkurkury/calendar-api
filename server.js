@@ -10,6 +10,7 @@ import {
   exchangeCodeForTokens,
   createGoogleEvent,
   listGoogleEvents,
+  deleteGoogleEvent,
   getGoogleConfig,
 } from "./google-calendar.js";
 
@@ -142,6 +143,13 @@ app.post("/api/google/events", requireApiKey, async (req, res) => {
   } catch (e) {
     res.status(500).json({ ok: false, message: e?.message || "unknown" });
   }
+});
+
+app.delete("/api/google/events/:eventId", requireApiKey, async (req, res) => {
+  const eventId = req.params.eventId;
+  const out = await deleteGoogleEvent({ eventId });
+  if (!out.ok) return res.status(400).json(out);
+  return res.json({ ok: true, message: "✅ Termin gelöscht" });
 });
 
 // ---- Quick Add: Text -> Datum/Uhrzeit -> Google Event ----
