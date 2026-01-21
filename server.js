@@ -9,6 +9,8 @@ import {
   getAuthUrl,
   exchangeCodeForTokens,
   createGoogleEvent,
+  listGoogleEvents,
+  deleteGoogleEvent,
   getGoogleConfig,
 } from "./google-calendar.js";
 
@@ -80,6 +82,18 @@ app.get("/api/google/auth-url", (req, res) => {
   res.json(getAuthUrl());
 });
 
+app.get("/api/google/events", async (req, res) => {
+  try {
+    const timeMin = new Date().toISOString();
+    const timeMax = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    const out = await listGoogleEvents({ timeMin, timeMax });
+    if (!out.ok) return res.status(400).json(out);
+    res.json(out);
+  } catch (e) {
+    res.status(500).json({ ok: false, message: e?.message || "unknown" });
+  }
+});
+
 // Callback: Google redirectet zu GOOGLE_REDIRECT_URI?code=...
 app.get("/api/google/callback", async (req, res) => {
   try {
@@ -129,6 +143,13 @@ app.post("/api/google/events", requireApiKey, async (req, res) => {
   } catch (e) {
     res.status(500).json({ ok: false, message: e?.message || "unknown" });
   }
+});
+
+app.delete("/api/google/events/:eventId", requireApiKey, async (req, res) => {
+  const eventId = req.params.eventId;
+  const out = await deleteGoogleEvent({ eventId });
+  if (!out.ok) return res.status(400).json(out);
+  return res.json({ ok: true, message: "✅ Termin gelöscht" });
 });
 
 // ---- Quick Add: Text -> Datum/Uhrzeit -> Google Event ----
